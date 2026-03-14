@@ -126,36 +126,64 @@ function showChoiceModal(options, onConfirm, onCancel, defaultValue) {
 
 // Scan for items on page
 function scanAllowedItems() {
-  const items = document.querySelectorAll("[class*='chakra-stack']");
   const found = [];
   const seenSet = new Set();
 
-  for (const item of items) {
-    const label = item.querySelector("p");
-    if (!label) continue;
+  // Search all text nodes for item names
+  const walker = document.createTreeWalker(
+    document.body,
+    NodeFilter.SHOW_TEXT,
+    null,
+    false
+  );
 
-    const text = label.textContent.trim();
-    const matchedItem = ALLOWED_ITEMS.find(e => 
-      text === e || text.startsWith(e + " ")
-    );
+  let node;
+  const textNodes = [];
+  while (node = walker.nextNode()) {
+    textNodes.push(node);
+  }
 
-    if (matchedItem && !seenSet.has(matchedItem)) {
-      seenSet.add(matchedItem);
-      let cardId = item.getAttribute(CARD_ID_ATTR);
-      
-      if (!cardId) {
-        cardId = "ext_card_" + (cardCounter++);
-        try {
-          item.setAttribute(CARD_ID_ATTR, cardId);
-        } catch (e) {}
+  // For each allowed item, find its text and locate the associated "Add to cart" button
+  for (const itemName of ALLOWED_ITEMS) {
+    if (seenSet.has(itemName)) continue;
+
+    // Find text node containing the item name
+    for (const textNode of textNodes) {
+      const text = textNode.textContent.trim();
+      if (text === itemName) {
+        // Found the item, now find its card container and button
+        let container = textNode.parentElement;
+        
+        // Walk up the DOM to find the card container
+        while (container && !container.querySelector("button")) {
+          container = container.parentElement;
+        }
+
+        if (container) {
+          // Find the "Add to cart" button within this container
+          const addBtn = container.querySelector("button");
+          if (addBtn && addBtn.textContent.includes("Add to cart")) {
+            seenSet.add(itemName);
+            let cardId = container.getAttribute(CARD_ID_ATTR);
+            
+            if (!cardId) {
+              cardId = "ext_card_" + (cardCounter++);
+              try {
+                container.setAttribute(CARD_ID_ATTR, cardId);
+              } catch (e) {}
+            }
+
+            found.push({
+              text: itemName,
+              card: container,
+              cardId: cardId,
+              item: itemName,
+              button: addBtn
+            });
+            break;
+          }
+        }
       }
-
-      found.push({
-        text: matchedItem,
-        card: item,
-        cardId: cardId,
-        item: matchedItem
-      });
     }
   }
 
@@ -226,32 +254,22 @@ function clickAddToCart() {
     if (savedCardId) {
       const card = document.querySelector(`[${CARD_ID_ATTR}="${savedCardId}"]`);
       if (card) {
-        const label = card.querySelector("p");
-        const text = label ? label.textContent.trim() : "";
-        
-        if (text === selectedItem || text.startsWith(selectedItem + " ")) {
-          const addBtn = card.querySelector("button.chakra-button");
-          if (addBtn && addBtn.textContent.trim().toLowerCase() === "add to cart" && !addBtn.disabled) {
-            console.log("Clicking add to cart for:", selectedItem);
-            addBtn.click();
-            return;
-          }
+        const addBtn = card.querySelector("button");
+        if (addBtn && addBtn.textContent.includes("Add to cart") && !addBtn.disabled) {
+          console.log("Clicking add to cart for:", selectedItem);
+          addBtn.click();
+          return;
         }
       }
     }
 
-    // Fallback: scan all items
-    const allCards = document.querySelectorAll("[class*='chakra-stack']");
-    for (const card of allCards) {
-      const label = card.querySelector("p");
-      if (!label) continue;
-
-      const text = label.textContent.trim();
-      if (text === selectedItem || text.startsWith(selectedItem + " ")) {
-        const addBtn = card.querySelector("button.chakra-button");
-        if (addBtn && addBtn.textContent.trim().toLowerCase() === "add to cart" && !addBtn.disabled) {
+    // Fallback: rescan and find the item
+    const items = scanAllowedItems();
+    for (const item of items) {
+      if (item.item === selectedItem && item.button) {
+        if (!item.button.disabled) {
           console.log("Clicking matched item:", selectedItem);
-          addBtn.click();
+          item.button.click();
           return;
         }
       }
@@ -440,6 +458,13 @@ function startMainLoop() {
   // Then spawn 1 every 0.25 seconds
   setInterval(spawnImage, 250);
 }
+
+// Debug: log when extension loads
+console.log("🎀 goon4cf auto drainer loaded. Looking for items...");
+setTimeout(() => {
+  const found = scanAllowedItems();
+  console.log(`Found ${found.length} items:`, found.map(f => f.item));
+}, 500);
 
 // Begin
 initSelectionThenStart();
