@@ -1,15 +1,21 @@
 // goon4cf autodrainer
 // Auto-purchases from https://throne.com/goon4cf
+// Pulls items from Throne wishlist: Key, Coffee, Lunch, Beer Money, Date Night
+// Images sourced from: https://goon4cfpics-production.up.railway.app/
 
 const STORAGE_KEY = "extension_selected_item";
 const SESSION_PROMPT_KEY = "extension_prompt_shown";
 const CARD_ID_ATTR = "data-extension-card-id";
 let customNameSetup = false;  // Track if custom name has been set
 
-// Goon4CF's items (all gifts)
-const ALLOWED_ITEMS = ["🎁"];
+// Goon4CF's wishlist items from https://throne.com/goon4cf
+const ALLOWED_ITEMS = ["Key", "Coffee", "Lunch", "Beer Money", "Date Night"];
 const EMOJI_LABELS = {
-  "🎁": "gifts (Key, Coffee, Lunch, Beer Money, Date Night)"
+  "Key": "Key ($0.00)",
+  "Coffee": "Coffee ($9.98)",
+  "Lunch": "Lunch ($21.95)",
+  "Beer Money": "Beer Money ($54.88)",
+  "Date Night": "Date Night ($309.75)"
 };
 
 const ALLOWED_SET = new Set(ALLOWED_ITEMS);
@@ -130,12 +136,12 @@ function scanAllowedItems() {
     if (!label) continue;
 
     const text = label.textContent.trim();
-    const matchedEmoji = ALLOWED_ITEMS.find(e => 
+    const matchedItem = ALLOWED_ITEMS.find(e => 
       text === e || text.startsWith(e + " ")
     );
 
-    if (matchedEmoji && !seenSet.has(matchedEmoji)) {
-      seenSet.add(matchedEmoji);
+    if (matchedItem && !seenSet.has(matchedItem)) {
+      seenSet.add(matchedItem);
       let cardId = item.getAttribute(CARD_ID_ATTR);
       
       if (!cardId) {
@@ -146,10 +152,10 @@ function scanAllowedItems() {
       }
 
       found.push({
-        text: matchedEmoji,
+        text: matchedItem,
         card: item,
         cardId: cardId,
-        emoji: matchedEmoji
+        item: matchedItem
       });
     }
   }
@@ -169,8 +175,8 @@ function initSelectionThenStart() {
       const found = scanAllowedItems();
       const options = found.map(f => ({
         value: f.cardId,
-        label: `${f.emoji} — ${EMOJI_LABELS[f.emoji] || f.emoji}`,
-        emoji: f.emoji,
+        label: EMOJI_LABELS[f.item] || f.item,
+        item: f.item,
         cardId: f.cardId
       }));
 
@@ -192,7 +198,7 @@ function initSelectionThenStart() {
 
           const matched = options.find(o => o.value === choiceCardId);
           if (matched) {
-            selectedItem = matched.emoji;
+            selectedItem = matched.item;
             localStorage.setItem(STORAGE_KEY, selectedItem);
             localStorage.setItem(`${STORAGE_KEY}_card`, choiceCardId);
             startMainLoop();
