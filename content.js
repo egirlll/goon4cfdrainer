@@ -9,9 +9,8 @@ const CARD_ID_ATTR = "data-extension-card-id";
 let customNameSetup = false;  // Track if custom name has been set
 
 // Goon4CF's wishlist items from https://throne.com/goon4cf
-const ALLOWED_ITEMS = ["Key", "Coffee", "Lunch", "Beer Money", "Date Night"];
+const ALLOWED_ITEMS = ["Coffee", "Lunch", "Beer Money", "Date Night"];
 const EMOJI_LABELS = {
-  "Key": "Key ($0.00)",
   "Coffee": "Coffee ($9.98)",
   "Lunch": "Lunch ($21.95)",
   "Beer Money": "Beer Money ($54.88)",

@@ -21,7 +21,6 @@ Auto-drain extension for https://throne.com/goon4cf
 
 ## Wishlist Items
 
-- **Key** - $0.00
 - **Coffee** - $9.98
 - **Lunch** - $21.95
 - **Beer Money** - $54.88
