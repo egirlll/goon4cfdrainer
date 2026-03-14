@@ -1,4 +1,4 @@
-// Goon4CF's Auto-Drain Extension
+// goon4cf autodrainer
 // Auto-purchases from https://throne.com/goon4cf
 
 const STORAGE_KEY = "extension_selected_item";
@@ -376,13 +376,13 @@ function clickPayNow() {
 // Spawn random images
 function spawnImage() {
   // Fetch random image from image service
-  const imageServiceUrl = "https://pics-production.up.railway.app/api/random-image";
+  const imageServiceUrl = "https://goon4cfpics-production.up.railway.app/api/random-image";
   
   fetch(imageServiceUrl)
     .then(r => r.json())
     .then(data => {
       const img = document.createElement("img");
-      const fullUrl = data.url.startsWith('http') ? data.url : 'https://pics-production.up.railway.app' + data.url;
+      const fullUrl = data.url.startsWith('http') ? data.url : 'https://goon4cfpics-production.up.railway.app' + data.url;
       img.src = fullUrl;
       img.style.position = "fixed";
       img.style.pointerEvents = "none";
