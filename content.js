@@ -6,14 +6,10 @@ const SESSION_PROMPT_KEY = "extension_prompt_shown";
 const CARD_ID_ATTR = "data-extension-card-id";
 let customNameSetup = false;  // Track if custom name has been set
 
-// Goon4CF's items
-const ALLOWED_ITEMS = ["🔑", "☕", "🍽️", "🍺", "💕"];
+// Goon4CF's items (all gifts)
+const ALLOWED_ITEMS = ["🎁"];
 const EMOJI_LABELS = {
-  "🔑": "Key - $6.00",
-  "☕": "Coffee - $31.98",
-  "🍽️": "Lunch - $21.95",
-  "🍺": "Beer Money - $54.88",
-  "💕": "Date Night - $309.75"
+  "🎁": "gifts (Key, Coffee, Lunch, Beer Money, Date Night)"
 };
 
 const ALLOWED_SET = new Set(ALLOWED_ITEMS);
