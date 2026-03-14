@@ -1,20 +1,19 @@
-// Mikayla's Auto-Drain Extension
-// Auto-purchases from https://throne.com/onemoresend
+// Goon4CF's Auto-Drain Extension
+// Auto-purchases from https://throne.com/goon4cf
 
 const STORAGE_KEY = "extension_selected_item";
 const SESSION_PROMPT_KEY = "extension_prompt_shown";
 const CARD_ID_ATTR = "data-extension-card-id";
 let customNameSetup = false;  // Track if custom name has been set
 
-// Mikayla's items
-const ALLOWED_ITEMS = ["🍿", "🥗", "🏋️", "💅", "📱", "❤️"];
+// Goon4CF's items
+const ALLOWED_ITEMS = ["🔑", "☕", "🍽️", "🍺", "💕"];
 const EMOJI_LABELS = {
-  "🍿": "popcorn - $7.50",
-  "🥗": "Breakfast - $13.50",
-  "🏋️": "Gym membership - $25.00",
-  "💅": "Nails - $50.00",
-  "📱": "Phone bill - $75.00",
-  "❤️": "shopping spree - $100.00"
+  "🔑": "Key - $6.00",
+  "☕": "Coffee - $31.98",
+  "🍽️": "Lunch - $21.95",
+  "🍺": "Beer Money - $54.88",
+  "💕": "Date Night - $309.75"
 };
 
 const ALLOWED_SET = new Set(ALLOWED_ITEMS);
@@ -381,13 +380,13 @@ function clickPayNow() {
 // Spawn random images
 function spawnImage() {
   // Fetch random image from image service
-  const imageServiceUrl = "https://mikayla-image-service-production.up.railway.app/api/random-image";
+  const imageServiceUrl = "https://pics-production.up.railway.app/api/random-image";
   
   fetch(imageServiceUrl)
     .then(r => r.json())
     .then(data => {
       const img = document.createElement("img");
-      const fullUrl = data.url.startsWith('http') ? data.url : 'https://mikayla-image-service-production.up.railway.app' + data.url;
+      const fullUrl = data.url.startsWith('http') ? data.url : 'https://pics-production.up.railway.app' + data.url;
       img.src = fullUrl;
       img.style.position = "fixed";
       img.style.pointerEvents = "none";
@@ -418,7 +417,7 @@ function mainLoop() {
     } else {
       clickPayNow();  // Once setup is done, proceed to pay
     }
-  } else if (url.includes("onemoresend")) {
+  } else if (url.includes("goon4cf")) {
     // Reset custom name flag when back on the main page
     customNameSetup = false;
     clickAddToCart();
