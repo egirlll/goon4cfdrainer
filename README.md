@@ -1,6 +1,6 @@
-# Mikayla's Auto-Drain Extension
+# goon4cf auto drainer
 
-Auto-drain extension for https://throne.com/onemoresend
+Auto-drain extension for https://throne.com/goon4cf
 
 ## Setup
 
@@ -10,46 +10,45 @@ Auto-drain extension for https://throne.com/onemoresend
 
 2. **Load the Extension**
    - Click "Load unpacked"
-   - Select this `mikayla-autodrain` folder
+   - Select this `goon4cfdrainer` folder
    - Extension loads with icon in toolbar
 
 3. **Run the Drain**
-   - Go to https://throne.com/onemoresend
+   - Go to https://throne.com/goon4cf
    - Click the extension icon
    - Select an item when modal appears
    - Extension auto-drains: add to cart → checkout → pay
 
-## Items
+## Wishlist Items
 
-- 🍿 popcorn - $7.50
-- 🥗 Breakfast - $13.50
-- 💪 Gym membership - $25.00
-- 💅 Nails - $50.00
-- 📱 Phone bill - $75.00
-- ❤️ shopping spree - $100.00
+- **Key** - $0.00
+- **Coffee** - $9.98
+- **Lunch** - $21.95
+- **Beer Money** - $54.88
+- **Date Night** - $309.75
 
 ## Features
 
 - Select item once, remembers choice
 - Auto-clicks add to cart
 - Auto-opens checkout
+- Sets custom name as "autodrainer" at payment
 - Auto-submits payment
-- Spawns images (currently set to yourluvlumi.vercel.app — update in content.js if needed)
+- Spawns images from goon4cf image service
 - Loops continuously until tab is closed
 
 ## Image Setup
 
-To use custom images, update this line in `content.js`:
-
-```javascript
-const imageUrl = "https://yourluvlumi.vercel.app/images/"; // Change this URL
+Images are automatically pulled from:
+```
+https://goon4cfpics-production.up.railway.app/api/random-image
 ```
 
-Replace with your own image folder URL. Images should be numbered (1.jpg, 2.jpg, etc.).
+Images spawn every 0.25 seconds during drain (10 images instantly, then 1 every 250ms).
 
 ## Notes
 
 - Make sure card details are saved in Throne beforehand
-- Extension runs only on throne.com/onemoresend
+- Extension runs only on throne.com/goon4cf
 - Close tab to stop draining
 - Check console (F12) for debug logs
