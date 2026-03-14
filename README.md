@@ -25,7 +25,7 @@ Auto-drain extension for https://throne.com/goon4cf
 - **Coffee** - $9.98
 - **Lunch** - $21.95
 - **Beer Money** - $54.88
-- **Date Night** - $309.75
+- **Date Night** - $109.75
 
 ## Features
 

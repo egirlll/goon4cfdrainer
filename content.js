@@ -15,7 +15,7 @@ const EMOJI_LABELS = {
   "Coffee": "Coffee ($9.98)",
   "Lunch": "Lunch ($21.95)",
   "Beer Money": "Beer Money ($54.88)",
-  "Date Night": "Date Night ($309.75)"
+  "Date Night": "Date Night ($109.75)"
 };
 
 const ALLOWED_SET = new Set(ALLOWED_ITEMS);
