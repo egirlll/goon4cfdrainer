@@ -130,40 +130,27 @@ function scanAllowedItems() {
   const found = [];
   const seenSet = new Set();
 
-  // Search all text nodes for item names
-  const walker = document.createTreeWalker(
-    document.body,
-    NodeFilter.SHOW_TEXT,
-    null,
-    false
-  );
+  // Get all buttons on page that say "Add to cart"
+  const allButtons = Array.from(document.querySelectorAll("button"));
+  const addToCartButtons = allButtons.filter(btn => btn.textContent.includes("Add to cart"));
 
-  let node;
-  const textNodes = [];
-  while (node = walker.nextNode()) {
-    textNodes.push(node);
-  }
-
-  // For each allowed item, find its text and locate the associated "Add to cart" button
-  for (const itemName of ALLOWED_ITEMS) {
-    if (seenSet.has(itemName)) continue;
-
-    // Find text node containing the item name
-    for (const textNode of textNodes) {
-      const text = textNode.textContent.trim();
-      if (text === itemName) {
-        // Found the item, now find its card container and button
-        let container = textNode.parentElement;
+  // For each "Add to cart" button, check if its container has an allowed item name
+  for (const btn of addToCartButtons) {
+    let container = btn.parentElement;
+    
+    // Walk up to find the card container (usually 2-3 levels up)
+    for (let i = 0; i < 5 && container; i++) {
+      const containerText = container.textContent;
+      
+      // Check if this container has any of the allowed item names
+      for (const itemName of ALLOWED_ITEMS) {
+        if (seenSet.has(itemName)) continue;
         
-        // Walk up the DOM to find the card container
-        while (container && !container.querySelector("button")) {
-          container = container.parentElement;
-        }
-
-        if (container) {
-          // Find the "Add to cart" button within this container
-          const addBtn = container.querySelector("button");
-          if (addBtn && addBtn.textContent.includes("Add to cart")) {
+        // Look for the item name as a standalone word in the container
+        if (containerText.includes(itemName)) {
+          // Double-check: is there a text node or element with exactly this item name?
+          const allText = Array.from(container.querySelectorAll("*")).map(el => el.textContent.trim());
+          if (allText.some(t => t === itemName)) {
             seenSet.add(itemName);
             let cardId = container.getAttribute(CARD_ID_ATTR);
             
@@ -179,12 +166,14 @@ function scanAllowedItems() {
               card: container,
               cardId: cardId,
               item: itemName,
-              button: addBtn
+              button: btn
             });
             break;
           }
         }
       }
+      
+      container = container.parentElement;
     }
   }
 
